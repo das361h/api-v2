@@ -1,12 +1,12 @@
-# app/models.py
-from sqlalchemy import Column, String, Integer, Text
-from sqlalchemy.dialects.mysql import JSON
-from .database import Base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Text, Integer, JSON
+
+Base = declarative_base()
 
 class Recipe(Base):
     __tablename__ = "recipedb"
 
-    rid = Column(String(4), primary_key=True, index=True)
+    rid = Column(String(4), primary_key=True)
     rname = Column(Text)
     ribs = Column(JSON)
     ringred = Column(JSON)
