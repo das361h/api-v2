@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# CORS for Android access
+# Allow all origins for development (adjust for production)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dependency for DB session
+# Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -26,22 +26,20 @@ def get_db():
 
 @app.get("/search/")
 def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(get_db)):
-    user_ingredients_set = set(i.lower() for i in ingredients)
     recipes = db.query(Recipe).all()
     result = []
-
     for recipe in recipes:
-        if recipe.ribs and all(i.lower() in user_ingredients_set for i in recipe.ribs):
-            result.append({
-                "rid": recipe.rid,
-                "rname": recipe.rname,
-                "rtype": recipe.rtype,
-                "rserving": recipe.rserving,
-                "rcuisine": recipe.rcuisine,
-                "roveralltime": recipe.roveralltime,
-                "ringred": recipe.ringred,
-                "rstep": recipe.rstep,
-                "rimage": recipe.rimage,
-            })
-
+        if recipe.ribs:
+            if all(ing.lower() in [i.lower() for i in recipe.ribs] for ing in ingredients):
+                result.append({
+                    "rid": recipe.rid,
+                    "rname": recipe.rname,
+                    "rtype": recipe.rtype,
+                    "rserving": recipe.rserving,
+                    "rcuisine": recipe.rcuisine,
+                    "roveralltime": recipe.roveralltime,
+                    "ringred": recipe.ringred,
+                    "rstep": recipe.rstep,
+                    "rimage": recipe.rimage,
+                })
     return result
