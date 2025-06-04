@@ -16,3 +16,10 @@ class Recipe(Base):
     roveralltime = Column(Text)
     rstep = Column(JSON)
     rimage = Column(Text)
+
+
+class Favorite(Base):
+    __tablename__ = "favdb"
+
+    userid = Column(String(50), primary_key=True)
+    favid = Column(String(50))

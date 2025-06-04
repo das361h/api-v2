@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
 from database import SessionLocal
-from models import Recipe
+from models import Recipe, Favorite
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -47,22 +47,18 @@ def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(ge
     return result
 
 @app.get("/addfav/")
-def add_favorite(uid: str, rid: str, db: Session = Depends(get_db)):
-    cursor = db.cursor()
+def add_to_favorites(uid: str, rid: str, db: Session = Depends(get_db)):
+    fav = db.query(Favorite).filter(Favorite.userid == uid).first()
 
-    # Check if user already exists
-    cursor.execute("SELECT favid FROM favdb WHERE userid = %s", (uid,))
-    result = cursor.fetchone()
-
-    if result:
-        current = result[0].split(',') if result[0] else []
-        if rid not in current:
-            current.append(rid)
-            updated = ','.join(current)
-            cursor.execute("UPDATE favdb SET favid = %s WHERE userid = %s", (updated, uid))
+    if fav:
+        favid_list = fav.favid.split(",") if fav.favid else []
+        if rid not in favid_list:
+            favid_list.append(rid)
+            fav.favid = ",".join(favid_list)
+            db.commit()
     else:
-        cursor.execute("INSERT INTO favdb (userid, favid) VALUES (%s, %s)", (uid, rid))
+        new_fav = Favorite(userid=uid, favid=rid)
+        db.add(new_fav)
+        db.commit()
 
-    db.commit()
-    cursor.close()
     return {"status": "success"}
