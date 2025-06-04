@@ -79,3 +79,30 @@ def remove_from_favorites(uid: str, rid: str, db: Session = Depends(get_db)):
             return {"status": "did not have"}
     else:
         return {"status": "uid not found"}
+    
+@app.get("/viewfav/")
+def view_favorites(uid: str, db: Session = Depends(get_db)):
+    fav = db.query(Favorite).filter(Favorite.userid == uid).first()
+
+    if not fav or not fav.favid:
+        return []
+
+    rid_list = fav.favid.split(",")
+    recipes = db.query(Recipe).filter(Recipe.rid.in_(rid_list)).all()
+
+    result = []
+    for recipe in recipes:
+        result.append({
+            "rid": recipe.rid,
+            "rname": recipe.rname,
+            "rtype": recipe.rtype,
+            "rserving": recipe.rserving,
+            "rcuisine": recipe.rcuisine,
+            "roveralltime": recipe.roveralltime,
+            "ringred": recipe.ringred,
+            "rstep": recipe.rstep,
+            "rimage": recipe.rimage,
+        })
+
+    return result
+
