@@ -106,3 +106,31 @@ def view_favorites(uid: str, db: Session = Depends(get_db)):
 
     return result
 
+@app.get("/searchany/")
+def search_any(string: str, db: Session = Depends(get_db)):
+    keyword = string.lower()
+    recipes = db.query(Recipe).all()
+    result = []
+
+    for recipe in recipes:
+        if (
+            keyword in (recipe.rname or "").lower() or
+            keyword in (recipe.rtype or "").lower() or
+            keyword in (recipe.rcuisine or "").lower() or
+            keyword in (recipe.ringred or "").lower() or
+            keyword in (recipe.rstep or "").lower()
+        ):
+            result.append({
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+            })
+
+    return result
+
