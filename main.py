@@ -114,11 +114,11 @@ def search_any(string: str, db: Session = Depends(get_db)):
 
     for recipe in recipes:
         if (
-            keyword in (recipe.rname or "").lower() or
-            keyword in (recipe.rtype or "").lower() or
-            keyword in (recipe.rcuisine or "").lower() or
-            keyword in (recipe.ringred or "").lower() or
-            keyword in (recipe.rstep or "").lower()
+            keyword in (recipe.rname or "")or
+            keyword in (recipe.rtype or "")or
+            keyword in (recipe.rcuisine or "")or
+            keyword in (recipe.ringred or "")or
+            keyword in (recipe.rstep or "")
         ):
             result.append({
                 "rid": recipe.rid,
