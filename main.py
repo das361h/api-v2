@@ -113,12 +113,16 @@ def search_any(string: str, db: Session = Depends(get_db)):
     result = []
 
     for recipe in recipes:
+        # Safely convert list fields to string for searching
+        ringred_text = " ".join(recipe.ringred) if isinstance(recipe.ringred, list) else str(recipe.ringred)
+        rstep_text = " ".join(recipe.rstep) if isinstance(recipe.rstep, list) else str(recipe.rstep)
+
         if (
-            keyword in (recipe.rname or "")or
-            keyword in (recipe.rtype or "")or
-            keyword in (recipe.rcuisine or "")or
-            keyword in (recipe.ringred or "")or
-            keyword in (recipe.rstep or "")
+            keyword in (recipe.rname or "").lower() or
+            keyword in (recipe.rtype or "").lower() or
+            keyword in (recipe.rcuisine or "").lower() or
+            keyword in ringred_text.lower() or
+            keyword in rstep_text.lower()
         ):
             result.append({
                 "rid": recipe.rid,
@@ -133,4 +137,3 @@ def search_any(string: str, db: Session = Depends(get_db)):
             })
 
     return result
-
