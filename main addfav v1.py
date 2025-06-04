@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, Query, Request
+from fastapi import FastAPI, Depends, Query
 from sqlalchemy.orm import Session
 from typing import List
 from database import SessionLocal
@@ -45,24 +45,3 @@ def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(ge
             })
 
     return result
-
-@app.get("/addfav/")
-def add_favorite(uid: str, rid: str, db: Session = Depends(get_db)):
-    cursor = db.cursor()
-
-    # Check if user already exists
-    cursor.execute("SELECT favid FROM favdb WHERE userid = %s", (uid,))
-    result = cursor.fetchone()
-
-    if result:
-        current = result[0].split(',') if result[0] else []
-        if rid not in current:
-            current.append(rid)
-            updated = ','.join(current)
-            cursor.execute("UPDATE favdb SET favid = %s WHERE userid = %s", (updated, uid))
-    else:
-        cursor.execute("INSERT INTO favdb (userid, favid) VALUES (%s, %s)", (uid, rid))
-
-    db.commit()
-    cursor.close()
-    return {"status": "success"}
