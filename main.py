@@ -62,3 +62,20 @@ def add_to_favorites(uid: str, rid: str, db: Session = Depends(get_db)):
         db.commit()
 
     return {"status": "success"}
+
+
+@app.get("/removefav/")
+def remove_from_favorites(uid: str, rid: str, db: Session = Depends(get_db)):
+    fav = db.query(Favorite).filter(Favorite.userid == uid).first()
+
+    if fav:
+        favid_list = fav.favid.split(",") if fav.favid else []
+        if rid in favid_list:
+            favid_list.remove(rid)
+            fav.favid = ",".join(favid_list)
+            db.commit()
+            return {"status": "removed"}
+        else:
+            return {"status": "did not have"}
+    else:
+        return {"status": "uid not found"}
