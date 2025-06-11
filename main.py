@@ -42,6 +42,13 @@ def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(ge
                 "ringred": recipe.ringred,
                 "rstep": recipe.rstep,
                 "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
             })
 
     return result

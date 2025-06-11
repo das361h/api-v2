@@ -6,7 +6,7 @@ Base = declarative_base()
 class Recipe(Base):
     __tablename__ = "recipedb"
 
-    rid = Column(String(4), primary_key=True)
+    rid = Column(Integer, primary_key=True)
     rname = Column(Text)
     ribs = Column(JSON)
     ringred = Column(JSON)
@@ -16,6 +16,13 @@ class Recipe(Base):
     roveralltime = Column(Text)
     rstep = Column(JSON)
     rimage = Column(Text)
+    verified = Column(Text)
+    tts = Column(Text)
+    rcal = Column(Integer)
+    rfat = Column(Integer)
+    rprot = Column(Integer)
+    rcarb = Column(Integer)
+    rsod = Column(Integer)
 
 
 class Favorite(Base):
