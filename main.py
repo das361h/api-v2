@@ -54,7 +54,7 @@ def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(ge
     return result
 
 @app.get("/addfav/")
-def add_to_favorites(uid: str, rid: str, db: Session = Depends(get_db)):
+def add_to_favorites(uid: str, rid: int, db: Session = Depends(get_db)):
     fav = db.query(Favorite).filter(Favorite.userid == uid).first()
 
     if fav:
