@@ -109,6 +109,13 @@ def view_favorites(uid: str, db: Session = Depends(get_db)):
             "ringred": recipe.ringred,
             "rstep": recipe.rstep,
             "rimage": recipe.rimage,
+            "verified": recipe.verified,
+            "tts": recipe.tts,
+            "rcal": recipe.rcal,
+            "rfat": recipe.rfat,
+            "rprot": recipe.rprot,
+            "rcarb": recipe.rcarb,
+            "rsod": recipe.rsod,
         })
 
     return result
@@ -141,6 +148,13 @@ def search_any(string: str, db: Session = Depends(get_db)):
                 "ringred": recipe.ringred,
                 "rstep": recipe.rstep,
                 "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
             })
 
     return result
