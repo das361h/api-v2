@@ -49,6 +49,7 @@ def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(ge
                 "rprot": recipe.rprot,
                 "rcarb": recipe.rcarb,
                 "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
             })
 
     return result
@@ -116,6 +117,7 @@ def view_favorites(uid: str, db: Session = Depends(get_db)):
             "rprot": recipe.rprot,
             "rcarb": recipe.rcarb,
             "rsod": recipe.rsod,
+            "rchol": recipe.rsod,
         })
 
     return result
@@ -155,6 +157,7 @@ def search_any(string: str, db: Session = Depends(get_db)):
                 "rprot": recipe.rprot,
                 "rcarb": recipe.rcarb,
                 "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
             })
 
     return result
