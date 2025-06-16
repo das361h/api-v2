@@ -129,7 +129,7 @@ def search_any(string: str, db: Session = Depends(get_db)):
     result = []
 
     for recipe in recipes:
-        # Safely convert list fields to string for searching
+        # convert JSON list fields to string for searching
         ringred_text = " ".join(recipe.ringred) if isinstance(recipe.ringred, list) else str(recipe.ringred)
         rstep_text = " ".join(recipe.rstep) if isinstance(recipe.rstep, list) else str(recipe.rstep)
 
@@ -161,3 +161,9 @@ def search_any(string: str, db: Session = Depends(get_db)):
             })
 
     return result
+
+@app.get("/deleteuser/")
+def delete_user_favorites(user: str, db: Session = Depends(get_db)):
+    fav_entry = db.query(Favorite).filter(Favorite.userid == user).first()
+    db.delete(fav_entry)
+    db.commit()
