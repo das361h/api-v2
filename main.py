@@ -167,3 +167,32 @@ def delete_user_favorites(user: str, db: Session = Depends(get_db)):
     fav_entry = db.query(Favorite).filter(Favorite.userid == user).first()
     db.delete(fav_entry)
     db.commit()
+
+
+@app.get("/servings/")
+def search_by_serving(amount: int, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.rserving >= amount).all()
+    result = []
+
+    for recipe in recipes:
+        result.append({
+            "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+        })
+
+    return result
