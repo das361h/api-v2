@@ -176,7 +176,35 @@ def search_by_serving(amount: int, db: Session = Depends(get_db)):
 
     for recipe in recipes:
         result.append({
-            "rid": recipe.rid,
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+        })
+
+    return result
+
+@app.get("/cuisine/")
+def search_by_cuisine(type: str, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.rcuisine.ilike(f"%{type}%")).all()
+    result = []
+
+    for recipe in recipes:
+        result.append({
+                "rid": recipe.rid,
                 "rname": recipe.rname,
                 "rtype": recipe.rtype,
                 "rserving": recipe.rserving,
