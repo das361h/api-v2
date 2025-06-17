@@ -224,3 +224,31 @@ def search_by_cuisine(type: str, db: Session = Depends(get_db)):
         })
 
     return result
+
+@app.get("/Between/")
+def get_between(type: str, value1: float, value2: float, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.str.between(value1, value2)).all()
+    result = []
+
+    for recipe in recipes:
+        result.append({
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+        })
+
+    return result
