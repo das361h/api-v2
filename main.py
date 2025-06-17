@@ -124,12 +124,36 @@ def view_favorites(uid: str, db: Session = Depends(get_db)):
 
 @app.get("/searchany/")
 def search_any(string: str, db: Session = Depends(get_db)):
-    keyword = string.lower()
     recipes = db.query(Recipe).all()
     result = []
 
+    if not string or string.strip() == "":
+        for recipe in recipes:
+            result.append({
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+            })
+        return result
+
+    keyword = string.lower()
+
     for recipe in recipes:
-        # convert JSON list fields to string for searching
+        # convert JSON list to string for searching
         ringred_text = " ".join(recipe.ringred) if isinstance(recipe.ringred, list) else str(recipe.ringred)
         rstep_text = " ".join(recipe.rstep) if isinstance(recipe.rstep, list) else str(recipe.rstep)
 
@@ -228,6 +252,62 @@ def search_by_cuisine(type: str, db: Session = Depends(get_db)):
 @app.get("/Between/")
 def get_between(nutrition: str, value1: float, value2: float, db: Session = Depends(get_db)):
     recipes = db.query(Recipe).filter(getattr(Recipe, nutrition).between(value1, value2)).all()
+    result = []
+
+    for recipe in recipes:
+        result.append({
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+        })
+
+    return result
+
+@app.get("/Maximum/")
+def get_between(nutrition: str, value1: float, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(getattr(Recipe, nutrition) <= value1).all()
+    result = []
+
+    for recipe in recipes:
+        result.append({
+                "rid": recipe.rid,
+                "rname": recipe.rname,
+                "rtype": recipe.rtype,
+                "rserving": recipe.rserving,
+                "rcuisine": recipe.rcuisine,
+                "roveralltime": recipe.roveralltime,
+                "ringred": recipe.ringred,
+                "rstep": recipe.rstep,
+                "rimage": recipe.rimage,
+                "verified": recipe.verified,
+                "tts": recipe.tts,
+                "rcal": recipe.rcal,
+                "rfat": recipe.rfat,
+                "rprot": recipe.rprot,
+                "rcarb": recipe.rcarb,
+                "rsod": recipe.rsod,
+                "rchol": recipe.rsod,
+        })
+
+    return result
+
+@app.get("/Minimum/")
+def get_between(nutrition: str, value1: float, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(getattr(Recipe, nutrition) >= value1).all()
     result = []
 
     for recipe in recipes:
