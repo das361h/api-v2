@@ -51,6 +51,7 @@ class RecipeUpload(BaseModel):
 
 
 class TodoPayload(BaseModel):
+    userid: str
     tasks: List[List[str]]
 
 @app.post("/savetodo/")
