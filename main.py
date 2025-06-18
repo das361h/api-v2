@@ -4,7 +4,7 @@ from sqlalchemy import func
 from typing import List
 from pydantic import BaseModel
 from database import SessionLocal
-from models import Recipe, Favorite
+from models import Recipe, Favorite, GroceryTodo
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -55,17 +55,17 @@ class TodoPayload(BaseModel):
 
 @app.post("/savetodo/")
 def save_user_tasks(user: str = Query(...), payload: TodoPayload = None, db: Session = Depends(get_db)):
-    existing = db.query(Todo).filter(Todo.userid == user).first()
+    existing = db.query(GroceryTodo).filter(GroceryTodo.userid == user).first()
     if existing:
         existing.tasks = payload.tasks
     else:
-        db.add(Todo(userid=user, tasks=payload.tasks))
+        db.add(GroceryTodo(userid=user, tasks=payload.tasks))
     db.commit()
     return {"status": "saved"}
 
 @app.get("/gettodo/")
 def get_user_tasks(user: str = Query(...), db: Session = Depends(get_db)):
-    todo = db.query(Todo).filter(Todo.userid == user).first()
+    todo = db.query(GroceryTodo).filter(GroceryTodo.userid == user).first()
     return todo.tasks if todo else []
 
 @app.post("/upload/")
