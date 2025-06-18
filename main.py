@@ -50,11 +50,11 @@ class RecipeUpload(BaseModel):
     #rchol: Optional[int] = 0
 
 
-class TodoPayload(BaseModel):
+class TodoList(BaseModel):
     tasks: List[List[str]]
 
 @app.post("/savetodo/")
-def save_user_tasks(user: str = Query(...), payload: TodoPayload = None, db: Session = Depends(get_db)):
+def save_user_tasks(user: str = Query(...), payload: TodoList = None, db: Session = Depends(get_db)):
     existing = db.query(GroceryTodo).filter(GroceryTodo.userid == user).first()
     if existing:
         existing.tasks = payload.tasks
@@ -92,6 +92,31 @@ def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(recipe)
     return {"rid": recipe.rid}
+
+@app.post("/editrecipe/")
+def edit_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
+    recipe = db.query(Recipe).filter(Recipe.rid == data.rid).first()
+
+    recipe.rname = data.rname
+    recipe.rtype = data.rtype
+    recipe.rserving = data.rserving
+    recipe.rcuisine = data.rcuisine
+    recipe.roveralltime = data.roveralltime
+    recipe.ringred = data.ringred
+    recipe.rstep = data.rstep
+    recipe.verified = data.verified
+    recipe.tts = data.tts
+    recipe.rcal = data.rcal
+    recipe.rfat = data.rfat
+    recipe.rprot = data.rprot
+    recipe.rcarb = data.rcarb
+    recipe.rsod = data.rsod
+    recipe.rchol = data.rchol
+    # image is skipped
+
+    db.commit()
+    return {"message": "Recipe updated successfully"}
+
 
 @app.get("/updateimage/")
 def update_image(rid: int, db: Session = Depends(get_db)):
