@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
+from pydantic import BaseModel
 from database import SessionLocal
 from models import Recipe, Favorite
 from fastapi.middleware.cors import CORSMiddleware
