@@ -33,7 +33,7 @@ class RecipeUpload(BaseModel):
     ringred: List[str]
     rstep: List[str]
     verified: str
-    tts: str = None
+    tts: str
     rcal: int
     rfat: int
     rprot: int
