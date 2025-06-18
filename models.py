@@ -31,3 +31,8 @@ class Favorite(Base):
 
     userid = Column(String(50), primary_key=True)
     favid = Column(String(50))
+
+class Todo(Base):
+    __tablename__ = "tododb"
+    userid = Column(String(50), primary_key=True)
+    tasks = Column(JSON)

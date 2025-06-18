@@ -49,6 +49,25 @@ class RecipeUpload(BaseModel):
     #rsod: Optional[int] = 0
     #rchol: Optional[int] = 0
 
+
+class TodoPayload(BaseModel):
+    tasks: List[List[str]]
+
+@app.post("/savetodo/")
+def save_user_tasks(user: str = Query(...), payload: TodoPayload = None, db: Session = Depends(get_db)):
+    existing = db.query(Todo).filter(Todo.userid == user).first()
+    if existing:
+        existing.tasks = payload.tasks
+    else:
+        db.add(Todo(userid=user, tasks=payload.tasks))
+    db.commit()
+    return {"status": "saved"}
+
+@app.get("/gettodo/")
+def get_user_tasks(user: str = Query(...), db: Session = Depends(get_db)):
+    todo = db.query(Todo).filter(Todo.userid == user).first()
+    return todo.tasks if todo else []
+
 @app.post("/upload/")
 def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     recipe = Recipe(
