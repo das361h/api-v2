@@ -23,6 +23,7 @@ class Recipe(Base):
     rprot = Column(Integer)
     rcarb = Column(Integer)
     rsod = Column(Integer)
+    rchol = Column(Integer)
 
 
 class Favorite(Base):
