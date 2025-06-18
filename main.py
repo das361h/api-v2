@@ -32,14 +32,21 @@ class RecipeUpload(BaseModel):
     roveralltime: str
     ringred: List[str]
     rstep: List[str]
-    verified: [str]
-    tts: Optional[str] = None
-    rcal: Optional[int] = 0
-    rfat: Optional[int] = 0
-    rprot: Optional[int] = 0
-    rcarb: Optional[int] = 0
-    rsod: Optional[int] = 0
-    rchol: Optional[int] = 0
+    verified: str
+    tts: str = None
+    rcal: int
+    rfat: int
+    rprot: int
+    rcarb: int
+    rsod: int
+    rchol: int
+
+#rcal: Optional[int] = 0
+#rfat: Optional[int] = 0
+    #rprot: Optional[int] = 0
+    #rcarb: Optional[int] = 0
+    #rsod: Optional[int] = 0
+    #rchol: Optional[int] = 0
 
 @app.post("/upload/")
 def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
