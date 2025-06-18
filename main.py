@@ -76,8 +76,8 @@ def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
 @app.get("/updateimage/")
 def update_image(rid: int, db: Session = Depends(get_db)):
     recipe = db.query(Recipe).filter(Recipe.rid == rid).first()
-    filename = f"{rid:04d}.jpg"
-    recipe.rimage = filename
+    filename = f"{rid:05d}.jpg"
+    recipe.rimage = "https://raw.githubusercontent.com/das361h/api-v2/refs/heads/main/image/"+filename
     db.commit()
     return {"status": "image dets updated", "rimage": filename}
 
