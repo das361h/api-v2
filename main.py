@@ -7,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# CORS for Android access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,13 +15,64 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dependency for DB session
+# Dependency for database session
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+class RecipeUpload(BaseModel):
+    rname: str
+    rtype: str
+    rserving: int
+    rcuisine: str
+    roveralltime: str
+    ringred: List[str]
+    rstep: List[str]
+    verified: [str]
+    tts: Optional[str] = None
+    rcal: Optional[int] = 0
+    rfat: Optional[int] = 0
+    rprot: Optional[int] = 0
+    rcarb: Optional[int] = 0
+    rsod: Optional[int] = 0
+    rchol: Optional[int] = 0
+
+@app.post("/upload/")
+def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
+    recipe = Recipe(
+        rname=data.rname,
+        rtype=data.rtype,
+        rserving=data.rserving,
+        rcuisine=data.rcuisine,
+        roveralltime=data.roveralltime,
+        ringred=data.ringred,
+        rstep=data.rstep,
+        verified=data.verified,
+        tts=data.tts,
+        rcal=data.rcal,
+        rfat=data.rfat,
+        rprot=data.rprot,
+        rcarb=data.rcarb,
+        rsod=data.rsod,
+        rchol=data.rchol,
+        rimage=None
+    )
+    db.add(recipe)
+    db.commit()
+    db.refresh(recipe)
+    return {"rid": recipe.rid}
+
+@app.get("/updateimage/")
+def update_image(rid: int, db: Session = Depends(get_db)):
+    recipe = db.query(Recipe).filter(Recipe.rid == rid).first()
+    filename = f"{rid:04d}.jpg"
+    recipe.rimage = filename
+    db.commit()
+    return {"status": "image dets updated", "rimage": filename}
+
 
 @app.get("/search/")
 def search_recipes(ingredients: List[str] = Query(...), db: Session = Depends(get_db)):
