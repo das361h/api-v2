@@ -328,7 +328,7 @@ def search_by_serving(amount: int, db: Session = Depends(get_db)):
 @app.get("/usercontent/")
 def get_user_recipes(user: str , db: Session = Depends(get_db)):
     # pattern = f"%{user}%"
-    recipes = db.query(Recipe).filter(Recipe.verified.like(f"%{user}%")).all()
+    recipes = db.query(Recipe).filter(Recipe.verified.ilike(f"%{user}%")).all()
 
     result = []
     for recipe in recipes:
