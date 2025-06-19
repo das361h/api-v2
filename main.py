@@ -493,3 +493,11 @@ def get_between(nutrition: str, value1: float, db: Session = Depends(get_db)):
         })
 
     return result
+
+@app.get("/deleterecipe/")
+def delete_recipe(rid: int, db: Session = Depends(get_db)):
+    recipe = db.query(Recipe).filter(Recipe.rid == rid).first()
+    db.delete(recipe)
+    db.commit()
+    return {"message": "Recipe deleted successfully"}
+
