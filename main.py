@@ -72,6 +72,7 @@ def get_user_tasks(user: str = Query(...), db: Session = Depends(get_db)):
 @app.post("/upload/")
 def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     recipe = Recipe(
+        rid=None,
         rname=data.rname,
         rtype=data.rtype,
         rserving=data.rserving,
