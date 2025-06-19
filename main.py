@@ -26,6 +26,7 @@ def get_db():
         db.close()
 
 class RecipeUpload(BaseModel):
+    rid: int
     rname: str
     rtype: str
     rserving: int
@@ -97,6 +98,7 @@ def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
 def edit_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     recipe = db.query(Recipe).filter(Recipe.rid == data.rid).first()
 
+    recipe.rid = data.rid
     recipe.rname = data.rname
     recipe.rtype = data.rtype
     recipe.rserving = data.rserving
