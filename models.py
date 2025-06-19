@@ -6,7 +6,7 @@ Base = declarative_base()
 class Recipe(Base):
     __tablename__ = "recipedb"
 
-    rid = Column(Integer, primary_key=True)
+    rid = Column(Integer, primary_key=True, index=True, autoincrement=True)
     rname = Column(Text)
     ribs = Column(JSON)
     ringred = Column(JSON)

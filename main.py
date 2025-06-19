@@ -26,7 +26,6 @@ def get_db():
         db.close()
 
 class RecipeUpload(BaseModel):
-    rid: int
     rname: str
     rtype: str
     rserving: int
@@ -36,6 +35,25 @@ class RecipeUpload(BaseModel):
     rstep: List[str]
     verified: str
     tts: str
+    rcal: int
+    rfat: int
+    rprot: int
+    rcarb: int
+    rsod: int
+    rchol: int
+
+
+class RecipeEdit(BaseModel):
+    rid: int
+    rname: str
+    rtype: str
+    rserving: int
+    rcuisine: str
+    roveralltime: str
+    ringred: List[str]
+    rstep: List[str]
+    verified: str
+    tts: str = None
     rcal: int
     rfat: int
     rprot: int
@@ -72,7 +90,6 @@ def get_user_tasks(user: str = Query(...), db: Session = Depends(get_db)):
 @app.post("/upload/")
 def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     recipe = Recipe(
-        rid=None,
         rname=data.rname,
         rtype=data.rtype,
         rserving=data.rserving,
@@ -96,7 +113,7 @@ def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
     return {"rid": recipe.rid}
 
 @app.post("/editrecipe/")
-def edit_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
+def edit_recipe(data: RecipeEdit, db: Session = Depends(get_db)):
     recipe = db.query(Recipe).filter(Recipe.rid == data.rid).first()
 
     recipe.rid = data.rid
