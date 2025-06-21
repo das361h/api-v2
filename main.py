@@ -82,10 +82,12 @@ def save_user_tasks(user: str = Query(...), payload: TodoList = None, db: Sessio
     db.commit()
     return {"status": "saved"}
 
-@app.get("/gettodo/")
-def get_user_tasks(user: str = Query(...), db: Session = Depends(get_db)):
+@app.get("/deletetodo/")
+def get_user_tasks(user: str, db: Session = Depends(get_db)):
     todo = db.query(GroceryTodo).filter(GroceryTodo.userid == user).first()
-    return todo.tasks if todo else []
+    db.delete(todo)
+    db.commit()
+
 
 @app.post("/upload/")
 def upload_recipe(data: RecipeUpload, db: Session = Depends(get_db)):
